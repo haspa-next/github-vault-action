@@ -1,0 +1,25 @@
+# action.yml
+name: 'Prepare vault configuration'
+description: 'Creates an empty vault secret folder if not yet existing and prepares credentials for the given service to access those credentials'
+inputs:
+    aws-access-key-id:
+        description: 'AWS Access Key ID'
+        required: true
+    aws-secret-access-key:
+        description: "AWS Secret Access Key"
+        required: true
+    service:
+        description: "Name of the service"
+        required: true
+    environment:
+        description: "Name of the environment"
+        required: true
+runs:
+    using: 'docker'
+    image: 'Dockerfile'
+    env:
+        AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
+        AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
+    args:
+        - ${{ inputs.service }}
+        - ${{ inputs.environment }}
