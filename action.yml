@@ -14,12 +14,16 @@ inputs:
     environment:
         description: "Name of the environment"
         required: true
+    vault-token: 
+        description: "Vault token"
+        required: true
 runs:
     using: 'docker'
     image: 'Dockerfile'
     env:
         AWS_ACCESS_KEY_ID: ${{ inputs.aws-access-key-id }}
         AWS_SECRET_ACCESS_KEY: ${{ inputs.aws-secret-access-key }}
+        VAULT_TOKEN: ${{ inputs.vault-token }}
     args:
         - ${{ inputs.service }}
         - ${{ inputs.environment }}
