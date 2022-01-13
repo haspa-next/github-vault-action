@@ -21,6 +21,10 @@ inputs:
         description: "The vault auth method to use, s3 or iam"
         required: false
         default: "s3"
+    iam_role:
+        description: "The IAM role to authorize if not the default one"
+        required: false
+        default: ""
 runs:
     using: 'docker'
     image: 'Dockerfile'
@@ -32,3 +36,4 @@ runs:
         - ${{ inputs.service }}
         - ${{ inputs.environment }}
         - ${{ inputs.method }}
+        - ${{ inputs.iam_role }}
