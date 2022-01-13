@@ -32,9 +32,6 @@ fi
 
 if [[ "$METHOD" == "iam" ]]; then
 	/scripts/create-iam-role.sh $SERVICE $ENV $IAM_ROLE
-    vault write -field=secret_id auth/approle/role/service-$SERVICE-$ENV/secret-id role_name=service-$SERVICE-$ENV > secret.tmp
-    aws s3 cp secret.tmp s3://vault-credentials/$SERVICE-$ENV
-    rm secret.tmp
 elif [[ "$METHOD" == "s3" ]]; then
     /scripts/create-role.sh $SERVICE $ENV
 	vault read auth/approle/role/service-$SERVICE-$ENV &> /dev/null
@@ -42,6 +39,9 @@ elif [[ "$METHOD" == "s3" ]]; then
 		echo "Role for $SERVICE-$ENV does not exist"
 		exit 1
 	fi
+    vault write -field=secret_id auth/approle/role/service-$SERVICE-$ENV/secret-id role_name=service-$SERVICE-$ENV > secret.tmp
+    aws s3 cp secret.tmp s3://vault-credentials/$SERVICE-$ENV
+    rm secret.tmp
 else
 	echo "Method '$METHOD' unknown"
 	exit 1
