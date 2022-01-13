@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source /opt/vault/bin/vault-env.sh
+source /scripts/vault-env.sh
 
 SERVICE=$1
 ENV=$2
