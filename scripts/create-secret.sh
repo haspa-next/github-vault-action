@@ -4,8 +4,7 @@ source /scripts/vault-env.sh
 
 SERVICE=$1
 ENV=$2
-FILE=$3
-METHOD=$4
+METHOD=$3
 
 if [ -z "$SERVICE" ]; then
 	echo "Usage: create-secret.sh <rolename>"
@@ -46,9 +45,5 @@ fi
 
 vault write -field=secret_id auth/approle/role/service-$SERVICE-$ENV/secret-id role_name=service-$SERVICE-$ENV > secret.tmp
 
-if [ -z "$FILE" ]; then
-	aws s3 cp secret.tmp s3://vault-credentials/$SERVICE-$ENV
-	rm secret.tmp
-else
-	mv secret.tmp $FILE
-fi
+aws s3 cp secret.tmp s3://vault-credentials/$SERVICE-$ENV
+rm secret.tmp
