@@ -29,9 +29,9 @@ if [ -z "$METHOD" ]; then
 	METHOD="s3"
 fi
 
-if [ "$METHOD" -eq "iam" ]; then
+if [[ "$METHOD" == "iam" ]]; then
 	/opt/vault/bin/create-iam-role.sh $SERVICE $ENV
-elif [ "$METHOD" -eq "s3" ]; then
+elif [[ "$METHOD" == "s3" ]]; then
 	/opt/vault/bin/create-role.sh $SERVICE $ENV
 	vault read auth/approle/role/service-$SERVICE-$ENV &> /dev/null
 	if [ "$?" -ne "0" ]; then
