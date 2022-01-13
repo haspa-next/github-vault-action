@@ -17,6 +17,10 @@ inputs:
     vault-token: 
         description: "Vault token"
         required: true
+    method:
+        description: "The vault auth method to use, s3 or iam"
+        required: false
+        default: "s3"
 runs:
     using: 'docker'
     image: 'Dockerfile'
@@ -27,3 +31,4 @@ runs:
     args:
         - ${{ inputs.service }}
         - ${{ inputs.environment }}
+        - ${{ inputs.method }}
