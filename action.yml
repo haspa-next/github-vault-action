@@ -4,10 +4,10 @@ description: 'Creates an empty vault secret folder if not yet existing and prepa
 inputs:
     aws-access-key-id:
         description: 'AWS Access Key ID'
-        required: true
+        required: false
     aws-secret-access-key:
         description: "AWS Secret Access Key"
-        required: true
+        required: false
     service:
         description: "Name of the service"
         required: true
