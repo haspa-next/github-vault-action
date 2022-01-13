@@ -30,9 +30,9 @@ if [ -z "$METHOD" ]; then
 fi
 
 if [[ "$METHOD" == "iam" ]]; then
-	/opt/vault/bin/create-iam-role.sh $SERVICE $ENV
+	/scripts/create-iam-role.sh $SERVICE $ENV
 elif [[ "$METHOD" == "s3" ]]; then
-	/opt/vault/bin/create-role.sh $SERVICE $ENV
+    /scripts/create-role.sh $SERVICE $ENV
 	vault read auth/approle/role/service-$SERVICE-$ENV &> /dev/null
 	if [ "$?" -ne "0" ]; then
 		echo "Role for $SERVICE-$ENV does not exist"
