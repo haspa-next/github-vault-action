@@ -1,10 +1,11 @@
 #!/bin/bash
 
-source /scripts/vault-env.sh
+source /opt/vault/bin/vault-env.sh
 
 SERVICE=$1
 ENV=$2
 FILE=$3
+METHOD=$4
 
 if [ -z "$SERVICE" ]; then
 	echo "Usage: create-secret.sh <rolename>"
@@ -25,11 +26,21 @@ if [ -z "$ENV" ]; then
 	ENV=stage
 fi
 
-/scripts/create-role.sh $SERVICE $ENV
+if [ -z "$METHOD" ]; then
+	METHOD="s3"
+fi
 
-vault read auth/approle/role/service-$SERVICE-$ENV &> /dev/null
-if [ "$?" -ne "0" ]; then
-	echo "Role for $SERVICE-$ENV does not exist"
+if [ "$METHOD" -eq "iam" ]; then
+	/opt/vault/bin/create-iam-role.sh $SERVICE $ENV
+elif [ "$METHOD" -eq "s3" ]; then
+	/opt/vault/bin/create-role.sh $SERVICE $ENV
+	vault read auth/approle/role/service-$SERVICE-$ENV &> /dev/null
+	if [ "$?" -ne "0" ]; then
+		echo "Role for $SERVICE-$ENV does not exist"
+		exit 1
+	fi
+else
+	echo "Method '$METHOD' unknown"
 	exit 1
 fi
 
