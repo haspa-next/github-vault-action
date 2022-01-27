@@ -1,6 +1,18 @@
 #!/bin/bash
 
-source /scripts/vault-env.sh
+#
+# This script creates an IAM role for the given service and environment that allows service who run with the associated AWS IAM role to 
+# login into this vault role and generate a token to access the services stored secrets
+#
+# The default IAM role will be arn:aws:iam::255382753382:role/credentials-$SERVICE-$ENV
+#
+# Usage: ./create-iam-role.sh <SERVICE> <ENV> [ <IAM_ROLE> ]
+#   
+# Example: ./create-iam-role.sh content-xo stage
+# 
+
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
+source $SCRIPT_DIR/vault-env.sh
 
 SERVICE=$1
 ENV=$2
@@ -31,21 +43,5 @@ fi
 
 vault token renew
 
-# Create policy for the service to read its own secrets
-cat << EOF > ./tmp-policy-service.hcl
-path "secret/service/$SERVICE/$ENV" {
-	capabilities = ["read"]
-}
-EOF
-vault policy write service-$SERVICE-$ENV tmp-policy-service.hcl
-rm tmp-policy-service.hcl
-
 # Create an IAM role for the service
 vault write auth/aws/role/service-$SERVICE-$ENV-iam region=eu-central-1 auth_type=iam bound_iam_principal_arn=$IAM_ROLE policies=service-base policies=service-$SERVICE-$ENV max_ttl=1h
-
-# Create empty secrets folder if not yet existing
-vault read secret/service/$SERVICE/$ENV &> /dev/null
-if [ "$?" -ne "0" ]; then
-	vault write secret/service/$SERVICE/$ENV name=$SERVICE
-fi
-
