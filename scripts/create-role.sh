@@ -11,7 +11,6 @@
 # Example: ./create-role.sh content-xo stage
 # 
 
-SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 source $SCRIPT_DIR/vault-env.sh
 
 SERVICE=$1
