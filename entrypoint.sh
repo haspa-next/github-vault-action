@@ -2,5 +2,7 @@
 
 export SCRIPT_DIR=/scripts
 
-sh /scripts/create-taskrole.sh $1 $2 $3
-sh /scripts/create-secret.sh $1 $2 $3 $4
+echo token: $VAULT_TOKEN
+
+/bin/bash /scripts/create-taskrole.sh $1 $2 $3
+/bin/bash /scripts/create-secret.sh $1 $2 $3 $4

@@ -38,7 +38,7 @@ fi
 vault token renew
 
 # Create approle if not yet existing
-NOT_FOUND_MSG='^No value found$'
+NOT_FOUND_MSG='^No value found*'
 ROLE=`vault read auth/approle/role/service-$SERVICE-$ENV 2>&1 1>/dev/null`
 
 if [[ $ROLE =~ $NOT_FOUND_MSG ]]; then

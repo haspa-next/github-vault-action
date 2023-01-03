@@ -54,16 +54,15 @@ rm tmp-policy-service.hcl
 
 # Create empty secrets folder if not yet existing
 
-NOT_FOUND_MSG='^No value found*'
+NOT_FOUND_MSG="^No value found.*"
 SECRET=`vault read secret/service/$SERVICE/$ENV 2>&1 1>/dev/null`
 
-if [[ $SECRET =~ $NOT_FOUND_MSG ]]; then
+if [[ "$SECRET" =~ $NOT_FOUND_MSG ]]; then
 	echo "Secret does not exist, new empty secret created"
 	vault write secret/service/$SERVICE/$ENV name=$SERVICE
 else
 	echo "The secret for this service already exists"
 fi
-
 
 # Create role for the service to access its secrets if a method is given
 
